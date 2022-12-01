@@ -10,10 +10,10 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
-import React, { useEffect } from "react";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { client } from "../App";
 
 type createPlanProps = {
   setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,10 +39,12 @@ export const CreatePlan = (props: createPlanProps) => {
     return planPost;
   };
 
-  const { mutate } = useMutation(postPlan);
+  const { mutate } = useMutation({mutationFn: postPlan, 
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['plan'] })
+    }});
 
   const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // useEffect(() => {
       e.preventDefault();
       setId(() => _id++);
       const plan = { _id, title, description, dueDate };
@@ -53,7 +55,6 @@ export const CreatePlan = (props: createPlanProps) => {
       setDueDate("");
       setDescription("");
       console.log("success");
-    // }, []);
   };
 
   return (

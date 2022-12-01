@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NavBar } from "./components/NavBar";
 import { Home } from "./Pages/Home";
 
+export const client = new QueryClient();
 function App() {
-  const client = new QueryClient();
   return (
     <div className="App">
       <QueryClientProvider client={client}>

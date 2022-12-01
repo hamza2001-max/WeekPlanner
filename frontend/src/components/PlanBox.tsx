@@ -11,8 +11,9 @@ import { AiOutlineMore } from "react-icons/ai";
 import { Icon } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { PlanBoxDetail } from "./PlanBoxDetail";
-import { useContext, useState } from "react";
-
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { client } from "../App";
 
 type propType = {
   _id: number;
@@ -30,14 +31,23 @@ export const PlanBox = (prop: propType) => {
       : setPlanDetailVisibility(false);
   };
 
-  const handleDeleteButton = async () => {    
-    const response = await fetch(`/api/plans/${prop._id}`, {
+  const postDeletion = async () => {
+    console.log(prop._id);
+    console.log("hye");
+    return await fetch(`/api/plans/${prop._id}`, {
       method: "DELETE",
     });
-    const json = response.json();
-    return json;
   };
 
+  const { mutate } = useMutation({mutationFn: postDeletion, 
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['plan'] })
+    }});
+  
+    const handleDeletion = () => {
+      return mutate();
+    }
+  
   return (
     <Box
       border="1.5px solid black"
@@ -85,7 +95,8 @@ export const PlanBox = (prop: propType) => {
               bg="#fff"
               borderTopRadius="10px"
               borderBottomRadius="0"
-              onClick={handleDeleteButton}
+              // isLoading={isLoading}
+              onClick={handleDeletion}
             >
               <DeleteIcon />
               <Text>Delete</Text>
