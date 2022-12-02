@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
-import { PlansDisplay } from "../components/PlansDisplay";
+import { PlanChart } from "../components/PlanChart";
 export const Home = () => {
   return (
     <Box position="relative">
-      <PlansDisplay />
+      <PlanChart />
     </Box>
   );
 };

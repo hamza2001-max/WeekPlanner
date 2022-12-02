@@ -14,6 +14,8 @@ import { PlanBoxDetail } from "./PlanBoxDetail";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { client } from "../App";
+// import { PlanForm } from "./PlanForm";
+import { EditForm } from "./EditForm";
 
 type propType = {
   _id: number;
@@ -24,6 +26,8 @@ type propType = {
 
 export const PlanBox = (prop: propType) => {
   const [planDetailVisibility, setPlanDetailVisibility] = useState(false);
+  // const [formVisibility, setFormVisibility] = useState(false);
+  const [editFormVisibility, setEditFormVisibility] = useState(false);
 
   const handlePlanDetailVisibility = () => {
     return !planDetailVisibility
@@ -32,22 +36,28 @@ export const PlanBox = (prop: propType) => {
   };
 
   const postDeletion = async () => {
-    console.log(prop._id);
-    console.log("hye");
+    // console.log(prop._id);
+    // console.log("hye");
     return await fetch(`/api/plans/${prop._id}`, {
       method: "DELETE",
     });
   };
 
-  const { mutate } = useMutation({mutationFn: postDeletion, 
+  const { mutate } = useMutation({
+    mutationFn: postDeletion,
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['plan'] })
-    }});
-  
-    const handleDeletion = () => {
-      return mutate();
-    }
-  
+      client.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
+
+  const handleDeletion = () => {
+    return mutate();
+  };
+
+  const handleEditing = () => {
+    setEditFormVisibility(!editFormVisibility);
+  };
+
   return (
     <Box
       border="1.5px solid black"
@@ -56,7 +66,7 @@ export const PlanBox = (prop: propType) => {
       minWidth={["100px", "100px", "100px", "135px", "170px"]}
       maxWidth={["200px", "250px", "0"]}
       whiteSpace="nowrap"
-      position="relative"
+      position="fixed"
       padding="5px 5px"
       onClick={handlePlanDetailVisibility}
     >
@@ -95,16 +105,27 @@ export const PlanBox = (prop: propType) => {
               bg="#fff"
               borderTopRadius="10px"
               borderBottomRadius="0"
-              // isLoading={isLoading}
               onClick={handleDeletion}
             >
               <DeleteIcon />
               <Text>Delete</Text>
             </Button>
-            <Button bg="#fff" borderBottomRadius="10px" borderTopRadius="0">
+
+            <Button
+              bg="#fff"
+              borderBottomRadius="10px"
+              borderTopRadius="0"
+              onClick={handleEditing}
+            >
               <EditIcon />
               <Text>Edit</Text>
             </Button>
+            {editFormVisibility && (
+                <Box position='absolute' display='flex' width='20vw' alignItems='center' justifyContent='center'>
+                <EditForm _id={prop._id} setEditFormVisibility={setEditFormVisibility}/>
+                </Box>
+            
+            )}
           </PopoverContent>
         </Popover>
       </Box>

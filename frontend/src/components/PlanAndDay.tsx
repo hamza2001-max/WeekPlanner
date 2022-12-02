@@ -1,8 +1,8 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { PlanBox } from "./PlanBox";
+import { v4 as uuidv4 } from "uuid";
 import Axios from "axios";
-
 
 type PropsType = {
   day: string;
@@ -15,15 +15,12 @@ type planBoxType = {
   description?: string;
 };
 
-export const PlanOfDay = (prop: PropsType) => {
+export const PlanAndDay = (prop: PropsType) => {
   const { data } = useQuery(["plan"], async () => {
     const response = await Axios.get("/api/plans");
     return response.data;
   });
 
-  // const mutation = useMutation({
-
-  // });
   return (
     <Box mb={["4rem", "2rem", "0"]}>
       <Heading
@@ -33,16 +30,17 @@ export const PlanOfDay = (prop: PropsType) => {
       >
         {prop.day}
       </Heading>
-
       {data?.map((plan: planBoxType) => {
-        return prop.day == plan.dueDate ? (
-          <PlanBox
-            key={plan._id}
-            _id={plan._id}
-            title={plan.title}
-            dueDate={plan.dueDate}
-            description={plan.description}
-          />
+        return prop.day === plan.dueDate ? (
+          <Box pb="6rem" key={uuidv4()}>
+            <PlanBox
+              key={uuidv4()}
+              _id={plan._id}
+              title={plan.title}
+              dueDate={plan.dueDate}
+              description={plan.description}
+            />
+          </Box>
         ) : null;
       })}
     </Box>

@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { CreatePlan } from "./CreatePlan";
+import { PlanForm } from "./PlanForm";
 
 export const NavBar = () => {
   const [formVisibility, setFormVisibility] = useState(false);
@@ -31,7 +31,7 @@ export const NavBar = () => {
           onClick={handleVisibility}
           _hover={{ cursor: "pointer" }}
         >
-          <CreatePlan setFormVisibility={setFormVisibility} />
+          <PlanForm setFormVisibility={setFormVisibility} />
         </Box>
       )}
       <Box

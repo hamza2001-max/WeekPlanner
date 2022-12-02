@@ -1,7 +1,8 @@
 import { Box } from "@chakra-ui/react";
-import { PlanOfDay } from "./PlanOfDay";
+import { PlanAndDay } from "./PlanAndDay";
+import { v4 as uuidv4 } from "uuid";
 
-export const PlansDisplay = () => {
+export const PlanChart = () => {
   const weekday = [
     "Sunday",
     "Monday",
@@ -18,10 +19,11 @@ export const PlansDisplay = () => {
       flexDirection={["column", "column", "row"]}
       justifyContent="space-between"
       px="1rem"
+      mr="6rem"
       mt="2rem"
     >
-      {weekday.map((day, index) => {
-        return <PlanOfDay key={index} day={day} />;
+      {weekday.map((day) => {
+        return <PlanAndDay key={uuidv4()} day={day} />;
       })}
     </Box>
   );

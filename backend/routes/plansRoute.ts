@@ -2,14 +2,14 @@ export {};
 const express = require("express");
 const {
   getAllPlans,
-  getSinglePlan,
+  updatePlan,
   postPlan,
   deletePlan,
 } = require("../controllers/plansControllers");
 
 const router = express.Router();
 router.get("/", getAllPlans);
-router.get("/:id", getSinglePlan);
+router.put("/:id", updatePlan);
 router.post("/", postPlan);
 router.delete("/:id", deletePlan);
 

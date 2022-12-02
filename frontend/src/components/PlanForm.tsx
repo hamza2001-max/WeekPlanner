@@ -26,7 +26,7 @@ interface postInterface {
   description: string;
 }
 
-export const CreatePlan = (props: createPlanProps) => {
+export const PlanForm = (props: createPlanProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
