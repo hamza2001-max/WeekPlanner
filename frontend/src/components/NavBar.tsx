@@ -7,16 +7,17 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { PlanForm } from "./PlanForm";
 
 export const NavBar = () => {
-  const [formVisibility, setFormVisibility] = useState(false);
-  const handleVisibility = (e: any) => {
-    return !formVisibility ? setFormVisibility(true) : setFormVisibility(false);
-  };
+  // const [formVisibility, setFormVisibility] = useState(false);
+  // const handleVisibility = (e: any) => {
+  //   return !formVisibility ? setFormVisibility(true) : setFormVisibility(false);
+  // };
   return (
     <>
-      {formVisibility && (
+      {/* {formVisibility && (
         <Box
           position="absolute"
           zIndex="1"
@@ -33,7 +34,7 @@ export const NavBar = () => {
         >
           <PlanForm setFormVisibility={setFormVisibility} />
         </Box>
-      )}
+      )} */}
       <Box
         display="flex"
         flexDirection={["column", "row"]}
@@ -44,9 +45,9 @@ export const NavBar = () => {
         borderBottom="2px solid black"
       >
         <Heading fontSize={["1.5rem", "2.4rem"]} flex="0%">
-          Timeline
+          <Link to={"/"}>Timeline</Link>
         </Heading>
-        <Box
+        {/* <Box
           display={["flex"]}
           flexDirection={["column", "row"]}
           ml={["0.6rem"]}
@@ -64,7 +65,7 @@ export const NavBar = () => {
               Create
             </Button>
           </Box>
-        </Box>
+        </Box> */}
         <Box ml="10px">
           <Popover>
             <PopoverTrigger>
@@ -78,10 +79,10 @@ export const NavBar = () => {
               boxShadow=" 0 0 10px #CBD5E0"
             >
               <Button bg="#fff" borderRadius="0">
-                Login
+              <Link to={'/login'}>Login</Link>  
               </Button>
               <Button bg="#fff" borderRadius="0">
-                Signin
+                <Link to={"/signup"}>Signin</Link>
               </Button>
             </PopoverContent>
           </Popover>

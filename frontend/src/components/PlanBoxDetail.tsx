@@ -19,6 +19,7 @@ export const PlanBoxDetail = (prop: propType) => {
       top="0"
       right="0"
       pl="1rem"
+      // zIndex={'10'}
       onClick={(e) => {
         e.stopPropagation();
       }}

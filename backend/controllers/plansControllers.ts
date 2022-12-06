@@ -61,24 +61,19 @@ const deletePlan = async (req: any, res: any) => {
 };
 
 const updatePlan = async (req: any, res: any) => {
-  // console.log("update start");
   const { newTitle, newDueDate, newDescription } = req.body;
-  console.log(newTitle, newDueDate, newDescription );
-  
-  const {id} = req.params;
+  console.log(newTitle, newDueDate, newDescription);
+
+  const { id } = req.params;
   console.log(id);
   try {
     await Plan.findById(id, (error: Error, newPlan: any) => {
-      // console.log(" first hey");
-      if (newPlan) {
-        newPlan.title = newTitle;
-        newPlan.dueDate = newDueDate;
-        newPlan.description = newDescription;
-        // console.log(" lasthey");
-        newPlan.save();
-        if (error) {
-          return res.status(400).json(error);
-        }
+      newPlan.title = newTitle;
+      newPlan.dueDate = newDueDate;
+      newPlan.description = newDescription;
+      newPlan.save();
+      if (error) {
+        return res.status(400).json(error);
       }
     });
   } catch (error) {

@@ -14,13 +14,15 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { client } from "../App";
+import { v4 as uuidv4 } from "uuid";
+
 
 type createPlanProps = {
   setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 interface postInterface {
-  _id: number;
+  _id: string;
   title: string;
   dueDate: string;
   description: string;
@@ -32,7 +34,6 @@ export const PlanForm = (props: createPlanProps) => {
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState(null);
   const [emptyfield, setEmptyfield] = useState([]);
-  let [_id, setId] = useState(1);
 
   const postPlan = async (post: postInterface) => {
     const planPost = await axios.post("/api/plans", post);
@@ -46,7 +47,7 @@ export const PlanForm = (props: createPlanProps) => {
 
   const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setId(() => _id++);
+      const _id = uuidv4();
       const plan = { _id, title, description, dueDate };
       mutate(plan);
       setError(null);

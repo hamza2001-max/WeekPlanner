@@ -14,7 +14,6 @@ import { PlanBoxDetail } from "./PlanBoxDetail";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { client } from "../App";
-// import { PlanForm } from "./PlanForm";
 import { EditForm } from "./EditForm";
 
 type propType = {
@@ -26,7 +25,6 @@ type propType = {
 
 export const PlanBox = (prop: propType) => {
   const [planDetailVisibility, setPlanDetailVisibility] = useState(false);
-  // const [formVisibility, setFormVisibility] = useState(false);
   const [editFormVisibility, setEditFormVisibility] = useState(false);
 
   const handlePlanDetailVisibility = () => {
@@ -36,8 +34,6 @@ export const PlanBox = (prop: propType) => {
   };
 
   const postDeletion = async () => {
-    // console.log(prop._id);
-    // console.log("hye");
     return await fetch(`/api/plans/${prop._id}`, {
       method: "DELETE",
     });
@@ -156,7 +152,7 @@ export const PlanBox = (prop: propType) => {
           left="0"
           width="100vw"
           height="100vh"
-          zIndex="1"
+          zIndex="10"
         >
           <PlanBoxDetail
             setPlanDetailVisibility={setPlanDetailVisibility}

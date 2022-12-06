@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   CloseButton,
-  Heading,
   Input,
   Select,
   Text,
@@ -10,7 +9,6 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
-import { json } from "stream/consumers";
 import { client } from "../App";
 
 type EditFormProps = {
@@ -25,9 +23,6 @@ export const EditForm = (props: EditFormProps) => {
 
   const postEditing = async () => {
     const plan = { newTitle, newDueDate, newDescription };
-    console.log(
-      "The id is " + props._id + newTitle + newDueDate + newDescription
-    );
     const edit = await axios.put(`/api/plans/${props._id}`, plan, {
       headers: {
         "Content-Type": "application/json",
