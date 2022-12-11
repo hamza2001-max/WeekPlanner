@@ -23,11 +23,7 @@ export const EditForm = (props: EditFormProps) => {
 
   const postEditing = async () => {
     const plan = { newTitle, newDueDate, newDescription };
-    const edit = await axios.put(`/api/plans/${props._id}`, plan, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const edit = await axios.put(`/api/plans/${props._id}`, plan);
     return edit;
   };
 

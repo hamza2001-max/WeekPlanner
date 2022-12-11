@@ -4,12 +4,6 @@ const Schema = mongoose.Schema;
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
-interface emailInterface {
-  email: string;
-}
-interface passwordInterface {
-  password: string;
-}
 const userSchema = new Schema({
   email: {
     type: String,
@@ -23,8 +17,8 @@ const userSchema = new Schema({
 });
 
 userSchema.statics.signup = async function (
-  email: emailInterface,
-  password: passwordInterface
+  email: string,
+  password: string
 ) {
   if (!email || !password) {
     throw Error("The input fields are empty.");
@@ -47,8 +41,8 @@ userSchema.statics.signup = async function (
 };
 
 userSchema.statics.login = async function (
-  email: emailInterface,
-  password: passwordInterface
+  email: string,
+  password: string
 ) {
   if (!email || !password) {
     throw Error("The input fields are empty.");

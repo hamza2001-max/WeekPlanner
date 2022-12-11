@@ -30,30 +30,28 @@ export const Home = () => {
       )}
       <PlanChart />
       <Box
-          display={["flex"]}
-          flexDirection={["column", "row"]}
-          ml={["0.6rem"]}
-          position='fixed'
-          bottom='4rem'
-          right='3rem'
+        display={["flex"]}
+        flexDirection={["column", "row"]}
+        ml={["0.6rem"]}
+        position="fixed"
+        bottom="4rem"
+        right="3rem"
+      >
+        <Button
+          me="10px"
+          bg="#000"
+          color="#fff"
+          height="6rem"
+          width="6rem"
+          _hover={{ background: "#000" }}
+          _active={{ background: "#4299e1" }}
+          minW={["20rem", "5rem", "5rem"]}
+          rounded="50%"
+          onClick={handleVisibility}
         >
-          <Box>
-            <Button
-              me="10px"
-              bg="#63b3ed"
-              color="#fff"
-              height='6rem'
-              width='6rem'
-              _hover={{ background: "#4299e1" }}
-              _active={{ background: "#4299e1" }}
-              minW={["20rem", "5rem", "5rem"]}
-              rounded='50%'
-              onClick={handleVisibility}
-            >
-              <AddIcon width={6} height={6}/>
-            </Button>
-          </Box>
-        </Box>
+          <AddIcon width={6} height={6} />
+        </Button>
+      </Box>
     </Box>
   );
 };

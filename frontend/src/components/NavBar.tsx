@@ -6,35 +6,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { PlanForm } from "./PlanForm";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export const NavBar = () => {
-  // const [formVisibility, setFormVisibility] = useState(false);
-  // const handleVisibility = (e: any) => {
-  //   return !formVisibility ? setFormVisibility(true) : setFormVisibility(false);
-  // };
+  const { user, setUser } = useAuthContext();
+
   return (
     <>
-      {/* {formVisibility && (
-        <Box
-          position="absolute"
-          zIndex="1"
-          height="100vh"
-          width="100vw"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          backdropFilter="auto"
-          backdropBlur="4px"
-          onClick={handleVisibility}
-          _hover={{ cursor: "pointer" }}
-        >
-          <PlanForm setFormVisibility={setFormVisibility} />
-        </Box>
-      )} */}
       <Box
         display="flex"
         flexDirection={["column", "row"]}
@@ -47,29 +26,10 @@ export const NavBar = () => {
         <Heading fontSize={["1.5rem", "2.4rem"]} flex="0%">
           <Link to={"/"}>Timeline</Link>
         </Heading>
-        {/* <Box
-          display={["flex"]}
-          flexDirection={["column", "row"]}
-          ml={["0.6rem"]}
-        >
-          <Box>
-            <Button
-              me="10px"
-              bg="#63b3ed"
-              color="#fff"
-              _hover={{ background: "#4299e1" }}
-              _active={{ background: "#4299e1" }}
-              minW={["20rem", "5rem", "5rem"]}
-              onClick={handleVisibility}
-            >
-              Create
-            </Button>
-          </Box>
-        </Box> */}
         <Box ml="10px">
           <Popover>
             <PopoverTrigger>
-              <Button>Temp</Button>
+              <Button>{user ? user.email[0] : "No User"}</Button>
             </PopoverTrigger>
             <PopoverContent
               maxW="100px"
@@ -78,12 +38,24 @@ export const NavBar = () => {
               borderRadius="10px"
               boxShadow=" 0 0 10px #CBD5E0"
             >
-              <Button bg="#fff" borderRadius="0">
-              <Link to={'/login'}>Login</Link>  
-              </Button>
-              <Button bg="#fff" borderRadius="0">
-                <Link to={"/signup"}>Signin</Link>
-              </Button>
+              {!user ? (
+                <>
+                  <Button bg="#fff" borderRadius="0">
+                    <Link to={"/login"}>Login</Link>
+                  </Button>
+                  <Button bg="#fff" borderRadius="0">
+                    <Link to={"/signup"}>Signup</Link>
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  bg="#fff"
+                  borderRadius="0"
+                  onClick={() => {setUser(null); localStorage.removeItem('user')}}
+                >
+                  Logout
+                </Button>
+              )}
             </PopoverContent>
           </Popover>
         </Box>

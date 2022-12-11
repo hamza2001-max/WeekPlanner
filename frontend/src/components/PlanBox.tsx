@@ -36,6 +36,7 @@ export const PlanBox = (prop: propType) => {
   const postDeletion = async () => {
     return await fetch(`/api/plans/${prop._id}`, {
       method: "DELETE",
+    
     });
   };
 

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PlanBox } from "./PlanBox";
 import { v4 as uuidv4 } from "uuid";
 import Axios from "axios";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 type PropsType = {
   day: string;
@@ -16,9 +17,16 @@ type planBoxType = {
 };
 
 export const PlanAndDay = (prop: PropsType) => {
+  const { user } = useAuthContext();
   const { data } = useQuery(["plan"], async () => {
-    const response = await Axios.get("/api/plans");
-    return response.data;
+    const response = await Axios.get("/api/plans", {
+      headers: {
+        'Authorization': `Bearer ${user?.token}`,
+      },
+    });
+    if (user) {
+      return response.data;
+    }
   });
 
   return (

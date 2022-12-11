@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { client } from "../App";
 import { v4 as uuidv4 } from "uuid";
-
+import { useAuthContext } from "../hooks/useAuthContext";
 
 type createPlanProps = {
   setFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,28 +34,36 @@ export const PlanForm = (props: createPlanProps) => {
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState(null);
   const [emptyfield, setEmptyfield] = useState([]);
+  const { user } = useAuthContext();
 
   const postPlan = async (post: postInterface) => {
-    const planPost = await axios.post("/api/plans", post);
+    const planPost = await axios.post("/api/plans", post, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
     return planPost;
   };
 
-  const { mutate } = useMutation({mutationFn: postPlan, 
+  const { mutate } = useMutation({
+    mutationFn: postPlan,
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['plan'] })
-    }});
+      client.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
 
   const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const _id = uuidv4();
-      const plan = { _id, title, description, dueDate };
-      mutate(plan);
-      setError(null);
-      setEmptyfield([]);
-      setTitle("");
-      setDueDate("");
-      setDescription("");
-      console.log("success");
+    e.preventDefault();
+    const _id = uuidv4();
+    const plan = { _id, title, description, dueDate };
+    mutate(plan);
+    setError(null);
+    setEmptyfield([]);
+    setTitle("");
+    setDueDate("");
+    setDescription("");
+    console.log("success");
   };
 
   return (
