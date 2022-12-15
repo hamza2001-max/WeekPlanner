@@ -29,7 +29,13 @@ export const NavBar = () => {
         <Box ml="10px">
           <Popover>
             <PopoverTrigger>
-              <Button>{user ? user.email[0] : "No User"}</Button>
+              {user ? (
+                <Button borderRadius={"50%"} height="4rem" width="4rem" fontSize='1.5rem'>
+                  {user?.email[0].toUpperCase()}
+                </Button>
+              ) : (
+                <Button>No User</Button>
+              )}
             </PopoverTrigger>
             <PopoverContent
               maxW="100px"
@@ -51,7 +57,10 @@ export const NavBar = () => {
                 <Button
                   bg="#fff"
                   borderRadius="0"
-                  onClick={() => {setUser(null); localStorage.removeItem('user')}}
+                  onClick={() => {
+                    setUser(null);
+                    localStorage.removeItem("user");
+                  }}
                 >
                   Logout
                 </Button>

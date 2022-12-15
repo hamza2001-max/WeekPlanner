@@ -33,16 +33,21 @@ export const PlanForm = (props: createPlanProps) => {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState(null);
-  const [emptyfield, setEmptyfield] = useState([]);
+  const [emptyfields, setEmptyfields] = useState<string[]>([]);
   const { user } = useAuthContext();
 
   const postPlan = async (post: postInterface) => {
-    const planPost = await axios.post("/api/plans", post, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.token}`,
-      },
-    });
+    const planPost = await axios
+      .post("/api/plans", post, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+      })
+      .catch((err) => {
+        setError(err.response.data.error);
+        setEmptyfields(err.response.data.emptyfields);
+      });
     return planPost;
   };
 
@@ -59,11 +64,10 @@ export const PlanForm = (props: createPlanProps) => {
     const plan = { _id, title, description, dueDate };
     mutate(plan);
     setError(null);
-    setEmptyfield([]);
+    setEmptyfields([]);
     setTitle("");
     setDueDate("");
     setDescription("");
-    console.log("success");
   };
 
   return (
@@ -111,6 +115,7 @@ export const PlanForm = (props: createPlanProps) => {
             cursor="pointer"
             id="dueDate"
             placeholder="Select"
+            value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           >
             <option value="Monday">Monday</option>
@@ -140,7 +145,7 @@ export const PlanForm = (props: createPlanProps) => {
             placeholder="Description"
           />
         </Box>
-        {error ? (
+        {error && (
           <Box
             border="1px solid red"
             bg="pink"
@@ -150,9 +155,9 @@ export const PlanForm = (props: createPlanProps) => {
             padding="12px"
           >
             <Text>{error}</Text>
-            <Text>{emptyfield}</Text>
+            <Text>{emptyfields.join(' ')}</Text>
           </Box>
-        ) : null}
+        )}
         <Button
           type="submit"
           mt="0.7rem"

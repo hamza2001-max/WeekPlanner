@@ -7,7 +7,9 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+  const [error, setError] = useState(null);
   const { setUser } = useAuthContext();
+
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const account = { email, password };
@@ -19,9 +21,16 @@ export const Login = () => {
       },
     });
     const json = await response.json();
-    setUser(json);
-    localStorage.setItem("user", JSON.stringify(json));
+    if (!response.ok) {
+      return setError(json.error);
+    }
+    if (response.ok) {
+      setUser(json);
+      localStorage.setItem("user", JSON.stringify(json));
+      return;
+    }
   };
+
   return (
     <form onSubmit={submitForm}>
       <Box
@@ -84,19 +93,39 @@ export const Login = () => {
           >
             Show Password
           </Checkbox>
-          <Link to="/signup">Dont't have an account? Signup!</Link>
-          <Button
-            float="right"
-            size={"lg"}
-            loadingText="Submitting"
-            mt={"1.2rem"}
-            mb="0.8rem"
-            bgColor={"#63b3ed"}
-            color="#fff"
-            type="submit"
+          {error && (
+            <Box
+              border="1px solid red"
+              bg="pink"
+              mt="0.3rem"
+              mb="0.3rem"
+              borderRadius="5px"
+              maxWidth="16em"
+              padding="12px"
+            >
+              <Text>{error}</Text>
+            </Box>
+          )}
+          <Box
+            display={"flex"}
+            justifyContent="space-between"
+            flexDirection={"column"}
           >
-            Login
-          </Button>
+            <Box fontSize={"1.1rem"} mb="0.8rem">
+              <Link to="/signup">Dont't have an account? Signup!</Link>
+            </Box>
+            <Button
+              float="right"
+              size={"lg"}
+              loadingText="Submitting"
+              mb="0.8rem"
+              bgColor={"#000"}
+              color="#fff"
+              type="submit"
+            >
+              Login
+            </Button>
+          </Box>
         </Box>
       </Box>
     </form>

@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { client } from "../App";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 type EditFormProps = {
   setEditFormVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,10 +21,16 @@ export const EditForm = (props: EditFormProps) => {
   const [newTitle, setNewTitle] = useState("");
   const [newDueDate, setNewDueDate] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const { user } = useAuthContext();
 
   const postEditing = async () => {
     const plan = { newTitle, newDueDate, newDescription };
-    const edit = await axios.put(`/api/plans/${props._id}`, plan);
+    const edit = await axios.put(`/api/plans/${props._id}`, plan, {
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${user?.token}`,
+      },
+    });
     return edit;
   };
 

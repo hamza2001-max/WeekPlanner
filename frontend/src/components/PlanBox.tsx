@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { client } from "../App";
 import { EditForm } from "./EditForm";
+import { useAuthContext } from "../hooks/useAuthContext";
+import axios from "axios";
 
 type propType = {
   _id: number;
@@ -23,10 +25,10 @@ type propType = {
   description?: string;
 };
 
-export const PlanBox = (prop: propType) => {
+export const PlanBox = (props: propType) => {
   const [planDetailVisibility, setPlanDetailVisibility] = useState(false);
   const [editFormVisibility, setEditFormVisibility] = useState(false);
-
+  const { user } = useAuthContext();
   const handlePlanDetailVisibility = () => {
     return !planDetailVisibility
       ? setPlanDetailVisibility(true)
@@ -34,9 +36,10 @@ export const PlanBox = (prop: propType) => {
   };
 
   const postDeletion = async () => {
-    return await fetch(`/api/plans/${prop._id}`, {
-      method: "DELETE",
-    
+    return await axios.delete(`/api/plans/${props._id}`, {
+      headers: {
+        Authorization: `Bearer ${user?.token}`,
+      },
     });
   };
 
@@ -46,14 +49,6 @@ export const PlanBox = (prop: propType) => {
       client.invalidateQueries({ queryKey: ["plan"] });
     },
   });
-
-  const handleDeletion = () => {
-    return mutate();
-  };
-
-  const handleEditing = () => {
-    setEditFormVisibility(!editFormVisibility);
-  };
 
   return (
     <Box
@@ -102,7 +97,7 @@ export const PlanBox = (prop: propType) => {
               bg="#fff"
               borderTopRadius="10px"
               borderBottomRadius="0"
-              onClick={handleDeletion}
+              onClick={() => mutate()}
             >
               <DeleteIcon />
               <Text>Delete</Text>
@@ -112,16 +107,24 @@ export const PlanBox = (prop: propType) => {
               bg="#fff"
               borderBottomRadius="10px"
               borderTopRadius="0"
-              onClick={handleEditing}
+              onClick={() => setEditFormVisibility(!editFormVisibility)}
             >
               <EditIcon />
               <Text>Edit</Text>
             </Button>
             {editFormVisibility && (
-                <Box position='absolute' display='flex' width='20vw' alignItems='center' justifyContent='center'>
-                <EditForm _id={prop._id} setEditFormVisibility={setEditFormVisibility}/>
-                </Box>
-            
+              <Box
+                position="absolute"
+                display="flex"
+                width="20vw"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <EditForm
+                  _id={props._id}
+                  setEditFormVisibility={setEditFormVisibility}
+                />
+              </Box>
             )}
           </PopoverContent>
         </Popover>
@@ -135,7 +138,7 @@ export const PlanBox = (prop: propType) => {
         textOverflow="ellipsis"
         mt="0.3rem"
       >
-        {prop.title}
+        {props.title}
       </Heading>
       <Heading
         fontSize={["1rem", "1.2rem", "1.1rem"]}
@@ -143,7 +146,7 @@ export const PlanBox = (prop: propType) => {
         mt="0.7rem"
         color="gray"
       >
-        {prop.dueDate}
+        {props.dueDate}
       </Heading>
 
       {planDetailVisibility && (
@@ -157,9 +160,9 @@ export const PlanBox = (prop: propType) => {
         >
           <PlanBoxDetail
             setPlanDetailVisibility={setPlanDetailVisibility}
-            title={prop.title}
-            dueDate={prop.dueDate}
-            description={prop.description}
+            title={props.title}
+            dueDate={props.dueDate}
+            description={props.description}
           />
         </Box>
       )}

@@ -2,8 +2,9 @@ import { Box, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { PlanBox } from "./PlanBox";
 import { v4 as uuidv4 } from "uuid";
-import Axios from "axios";
+// import Axios from "axios";
 import { useAuthContext } from "../hooks/useAuthContext";
+import axios from "axios";
 
 type PropsType = {
   day: string;
@@ -19,7 +20,7 @@ type planBoxType = {
 export const PlanAndDay = (prop: PropsType) => {
   const { user } = useAuthContext();
   const { data } = useQuery(["plan"], async () => {
-    const response = await Axios.get("/api/plans", {
+    const response = await axios.get("/api/plans", {
       headers: {
         'Authorization': `Bearer ${user?.token}`,
       },

@@ -2,15 +2,16 @@ export {};
 const mongoose = require("mongoose");
 const Plan = require("../models/plansModel");
 
-interface PlanInterface {
-  _id: number;
-  title: string;
-  dueDate: string;
-  description?: string;
-}
+// interface PlanInterface {
+//   _id: number;
+//   title: string;
+//   dueDate: string;
+//   description?: string;
+// }
 
 const getAllPlans = async (req: any, res: any) => {
-  const allPlans = await Plan.find().sort({ createdAt: -1 });
+  const userId = req.user?._id;
+  const allPlans = await Plan.find({ userId }).sort({ createdAt: -1 });
   res.status(200).json(allPlans);
 };
 
@@ -27,21 +28,25 @@ const getAllPlans = async (req: any, res: any) => {
 // };
 
 const postPlan = async (req: any, res: any) => {
+  const userId = req.user?._id;
+  // console.log(userId);
   const { title, dueDate, description } = req.body;
-  const emptyfield = [];
+
+  const emptyfields = [];
   if (!title) {
-    emptyfield.push("title");
+    emptyfields.push("Title");
   }
   if (!dueDate) {
-    emptyfield.push("dueDate");
+    emptyfields.push("DueDate");
   }
-  if (emptyfield.length > 0) {
+  if (emptyfields.length > 0) {
     return res
       .status(400)
-      .json({ error: "Fill all of the fields please.", emptyfield });
+      .json({ error: "Fill all of the fields:", emptyfields });
   }
   try {
-    const plan = await Plan.create({ title, description, dueDate });
+    console.log(userId);
+    const plan = await Plan.create({ title, description, dueDate, userId });
     res.status(200).json(plan);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -62,26 +67,16 @@ const deletePlan = async (req: any, res: any) => {
 
 const updatePlan = async (req: any, res: any) => {
   const { newTitle, newDueDate, newDescription } = req.body;
-  console.log(newTitle, newDueDate, newDescription);
-
   const { id } = req.params;
-  console.log(id);
-  try {
-    await Plan.findById(id, (error: Error, newPlan: any) => {
-      newPlan.title = newTitle;
-      newPlan.dueDate = newDueDate;
-      newPlan.description = newDescription;
-      newPlan.save();
-      if (error) {
-        return res.status(400).json(error);
-      }
-    });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-  console.log("update end");
-  return res.status(200).json(`Successfully Updated`);
+  Plan.findById({ _id: id }, async (error: Error, newPlan: any) => {
+    if (error) {
+      return res.status(400).json(error);
+    }
+    newPlan.title = await newTitle;
+    newPlan.dueDate = await newDueDate;
+    newPlan.description = await newDescription;
+    await newPlan.save();
+  });
 };
-
 
 module.exports = { getAllPlans, updatePlan, postPlan, deletePlan };
